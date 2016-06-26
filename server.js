@@ -1,6 +1,6 @@
 //require our websocket library 
-var WebSocketServer = require('ws').Server; 
-
+var WebSocketServer = require('ws').Server;
+ 
 //creating a websocket server at port 9090 
 var wss = new WebSocketServer({port: 9090}); 
 
@@ -11,12 +11,11 @@ var users = {};
 wss.on('connection', function(connection) {
   
    console.log("User connected");
-	
+	 
    //when server gets a message from a connected user 
-   connection.on('message', function(message) { 
-	
+   connection.on('message', function(message) {
+	 
       var data; 
-		
       //accepting only JSON messages 
       try { 
          data = JSON.parse(message); 
@@ -24,13 +23,12 @@ wss.on('connection', function(connection) {
          console.log("Invalid JSON"); 
          data = {}; 
       }
-		
+		  
       //switching type of the user message 
       switch (data.type) { 
-         //when a user tries to login
+         //when a user tries to login 
          case "login": 
             console.log("User logged", data.name); 
-				
             //if anyone is logged in with this username then refuse 
             if(users[data.name]) { 
                sendTo(connection, { 
@@ -46,13 +44,13 @@ wss.on('connection', function(connection) {
                   type: "login", 
                   success: true 
                }); 
-            } 
+            }
 				
             break;
 				
          case "offer": 
             //for ex. UserA wants to call UserB 
-            console.log("Sending offer to: ", data.name);
+            console.log("Sending offer to: ", data.name); 
 				
             //if UserB exists then send him offer details 
             var conn = users[data.name]; 
@@ -66,7 +64,7 @@ wss.on('connection', function(connection) {
                   offer: data.offer, 
                   name: connection.name 
                }); 
-            }
+            } 
 				
             break;
 				
@@ -83,11 +81,11 @@ wss.on('connection', function(connection) {
                }); 
             } 
 				
-            break; 
+            break;
 				
          case "candidate": 
-            console.log("Sending candidate to:",data.name); 
-            var conn = users[data.name];
+            console.log("Sending candidate to:",data.name);
+            var conn = users[data.name];  
 				
             if(conn != null) { 
                sendTo(conn, { 
@@ -104,11 +102,11 @@ wss.on('connection', function(connection) {
             conn.otherName = null; 
 				
             //notify the other user so he can disconnect his peer connection 
-            if(conn != null) {
+            if(conn != null) { 
                sendTo(conn, { 
-                  type: "leave" 
-              }); 
-            }
+                  type: "leave"
+               });
+            }  
 				
             break;
 				
@@ -118,10 +116,10 @@ wss.on('connection', function(connection) {
                message: "Command not found: " + data.type 
             }); 
 				
-            break; 
-      }
-		
-   }); 
+            break;
+				
+      }  
+   });
 	
    //when user exits, for example closes a browser window 
    //this may help if we are still in "offer","answer" or "candidate" state 
@@ -139,13 +137,13 @@ wss.on('connection', function(connection) {
                sendTo(conn, { 
                   type: "leave" 
                }); 
-            }
+            }  
          } 
-      }
-		
-   });  
+      } 
+   });
 	
-   connection.send("Hello world");  
+   connection.send("Hello world");
+	
 });
   
 function sendTo(connection, message) { 
