@@ -15,10 +15,10 @@
 	</form>
 	
 	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
+	<script src="http://helpme.com.de:9090/socket.io/socket.io.js"></script>
 	<script>
 		jQuery(function($){
-			var socket = io.connect();
+			var socket = io.connect("http://helpme.com.de:9090");
 			var $messageForm = $("#send-message");
 			var $messageBox = $("#message");		
 			var $chat = $("#chat");
