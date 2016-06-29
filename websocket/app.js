@@ -21,9 +21,9 @@ app.listen(9090);
 
 server.listen(9090);*/
 
-app.get('/', function(req, res) {
+/*app.get('/', function(req, res) {
 	res.sendfile(__dirname + '/index.html');
-});
+});*/
 
 io.sockets.on('connection', function(socket){
 	socket.on('send message', function(data){
