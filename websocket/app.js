@@ -4,7 +4,7 @@ var https = require('https'),
 var options = {
     key:    fs.readFileSync('/etc/cert/privkey.pem'),
     cert:   fs.readFileSync('/etc/cert/cert.pem')//,
-    //ca:     fs.readFileSync('ssl/ca.crt') //we don't know yet what is it
+    //ca:     fs.readFileSync('ssl/ca.crt') 
 };
 
 var app = https.createServer(options);
@@ -28,6 +28,7 @@ server.listen(9090);*/
 io.sockets.on('connection', function(socket){
 	socket.on('send message', function(data){
 		io.sockets.emit('new message', data);////this sends it to everyone, including the sender.
+		console.log(data);
 		//socket.broadcast.emit('new message', data);//sends it to everyone except the sender.
 	});
 });

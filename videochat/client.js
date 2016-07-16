@@ -109,7 +109,7 @@ function handleLogin(success) {
          var configuration = { 
             "iceServers": [{ "url": "stun:stun2.1.google.com:19302" }]
          }; 
-			
+
          yourConn = new webkitRTCPeerConnection(configuration); 
 			
          // setup stream listening 
