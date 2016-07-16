@@ -20,9 +20,11 @@ socket.on('new message', function(msg){
 	//console.log("Got message", msg.data); 
 	   console.log(msg);
 	console.log("----");
-		var data = JSON.parse(msg.data); 
+		var data = JSON.parse(msg); 
 console.log(data);
 	console.log("=====");
+	console.log(data.type);
+	console.log("*******");
 	   switch(data.type) { 
 		  case "login": 
 			 handleLogin(data.success); 
