@@ -3,13 +3,46 @@ var name;
 var connectedUser;
  
 //connecting to our signaling server 
-var conn = new WebSocket('ws://localhost:9090');
- 
-conn.onopen = function () { 
-   console.log("Connected to the signaling server"); 
-};
+//var conn = new WebSocket('ws://localhost:9090');
+
+var socket = io.connect("https://helpme.com.de:9090");
+
+//Double check: Find how to do the following in socket.io
+//conn.onopen = function () { 
+//   console.log("Connected to the signaling server"); 
+//};
  
 //when we got a message from a signaling server 
+
+socket.on('new message', function(msg){
+	   console.log("Got message", msg.data); 
+	   
+		var data = JSON.parse(msg.data); 
+
+	   switch(data.type) { 
+		  case "login": 
+			 handleLogin(data.success); 
+			 break; 
+		  //when somebody wants to call us 
+		  case "offer": 
+			 handleOffer(data.offer, data.name); 
+			 break; 
+		  case "answer": 
+			 handleAnswer(data.answer); 
+			 break; 
+		  //when a remote peer sends an ice candidate to us 
+		  case "candidate": 
+			 handleCandidate(data.candidate); 
+			 break; 
+		  case "leave": 
+			 handleLeave(); 
+			 break; 
+		  default: 
+			 break; 
+	   } 
+});
+
+/*
 conn.onmessage = function (msg) { 
    console.log("Got message", msg.data); 
    var data = JSON.parse(msg.data); 
@@ -36,10 +69,12 @@ conn.onmessage = function (msg) {
          break; 
    } 
 }; 
+*/
 
-conn.onerror = function (err) { 
-   console.log("Got error", err); 
-};
+//Double check: Check how to do the following in socket.io
+//conn.onerror = function (err) { 
+//   console.log("Got error", err); 
+//};
  
 //alias for sending JSON encoded messages 
 function send(message) { 
@@ -48,7 +83,9 @@ function send(message) {
       message.name = connectedUser; 
    } 
 	
-   conn.send(JSON.stringify(message)); 
+   //conn.send(JSON.stringify(message)); 
+   socket.emit('send message', JSON.stringify(message));
+	
 };
  
 //****** 

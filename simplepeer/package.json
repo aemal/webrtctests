@@ -1,0 +1,17 @@
+{
+	"name": "p2p-video-chat-webrtc",
+	"version": "0.0.1",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "budo index.js:bundle.js"
+	},
+	"author": "Aemal Sayer",
+	"license": "MIT",
+	"devDependencies": {
+		"budo": "^4.1.0"
+	},
+	"dependencies": {
+		"simple-peer": "^5.11.4"
+	}
+}
