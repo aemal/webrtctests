@@ -15,7 +15,9 @@ var socket = io.connect("https://helpme.com.de:9090");
 //when we got a message from a signaling server 
 
 socket.on('new message', function(msg){
-	   console.log("Got message", msg.data); 
+	   console.log("::: Got a message :::");
+
+	console.log("Got message", msg.data); 
 	   
 		var data = JSON.parse(msg.data); 
 
