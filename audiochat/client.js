@@ -15,16 +15,10 @@ var socket = io.connect("https://helpme.com.de:9090");
 //when we got a message from a signaling server 
 
 socket.on('new message', function(msg){
-	   console.log("::: Got a message :::");
 
 	//console.log("Got message", msg.data); 
-	   console.log(msg);
-	console.log("----");
 		var data = JSON.parse(msg); 
-console.log(data);
-	console.log("=====");
-	console.log(data.type);
-	console.log("*******");
+
 	   switch(data.type) { 
 		  case "login": 
 			 handleLogin(data.success); 
@@ -144,7 +138,7 @@ function handleLogin(success) {
          stream = myStream; 
 			
          //displaying local audio stream on the page 
-         localAudio.src = window.URL.createObjectURL(stream);
+         //localAudio.src = window.URL.createObjectURL(stream);
 			
          //using Google public stun server 
          var configuration = { 
