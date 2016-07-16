@@ -17,10 +17,12 @@ var socket = io.connect("https://helpme.com.de:9090");
 socket.on('new message', function(msg){
 	   console.log("::: Got a message :::");
 
-	console.log("Got message", msg.data); 
-	   
+	//console.log("Got message", msg.data); 
+	   console.log(msg);
+	console.log("----");
 		var data = JSON.parse(msg.data); 
-
+console.log(data);
+	console.log("=====");
 	   switch(data.type) { 
 		  case "login": 
 			 handleLogin(data.success); 
