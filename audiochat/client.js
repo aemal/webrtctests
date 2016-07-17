@@ -15,7 +15,7 @@ var socket = io.connect("https://helpme.com.de:9090");
 //when we got a message from a signaling server 
 
 socket.on('new message', function(msg){
-
+	console.log("New Message...");
 	//console.log("Got message", msg.data); 
 		var data = JSON.parse(msg); 
 
@@ -137,6 +137,7 @@ function handleLogin(success) {
 		
       //getting local audio stream 
       navigator.webkitGetUserMedia({ video: false, audio: true }, function (myStream) { 
+		  console.log("Start of getUserMedia...");
          stream = myStream; 
 			
          //displaying local audio stream on the page 
@@ -154,12 +155,15 @@ function handleLogin(success) {
 			
          //when a remote user adds stream to the peer connection, we display it 
          yourConn.onaddstream = function (e) { 
+			 console.log("onaddstream executed...");
             remoteAudio.src = window.URL.createObjectURL(e.stream); 
          }; 
 			
          // Setup ice handling 
          yourConn.onicecandidate = function (event) { 
-            if (event.candidate) { 
+            console.log("ICE Candidate body executed...");
+			 if (event.candidate) { 
+				 console.log("ICE Candidate condition executed...");
                send({ 
                   type: "candidate", 
                   candidate: event.candidate 
