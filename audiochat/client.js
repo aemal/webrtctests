@@ -18,7 +18,9 @@ socket.on('new message', function(msg){
 	console.log("New Message...");
 	//console.log("Got message", msg.data); 
 		var data = JSON.parse(msg); 
-
+console.log("-----------------------");
+	console.log(data);
+	console.log("-----------------------");
 	   switch(data.type) { 
 		  case "login": 
 			 handleLogin(data.success); 
@@ -113,14 +115,14 @@ callPage.style.display = "none";
 loginBtn.addEventListener("click", function (event) { 
    name = usernameInput.value; 
 	
-   /*if (name.length > 0) { 
+   if (name.length > 0) { 
       send({ 
          type: "login", 
          name: name 
       }); 
-   } */
+   } 
 	
-	handleLogin(true);
+	//handleLogin(true);
 	
 });
  
@@ -155,7 +157,7 @@ function handleLogin(success) {
 			
          //when a remote user adds stream to the peer connection, we display it 
          yourConn.onaddstream = function (e) { 
-			 console.log("onaddstream executed...");
+			console.log("onaddstream executed...");
             remoteAudio.src = window.URL.createObjectURL(e.stream); 
          }; 
 			
