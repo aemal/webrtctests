@@ -113,12 +113,14 @@ callPage.style.display = "none";
 loginBtn.addEventListener("click", function (event) { 
    name = usernameInput.value; 
 	
-   if (name.length > 0) { 
+   /*if (name.length > 0) { 
       send({ 
          type: "login", 
          name: name 
       }); 
-   } 
+   } */
+	
+	handleLogin(true);
 	
 });
  
