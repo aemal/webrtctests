@@ -101,7 +101,7 @@ var callToUsernameInput = document.querySelector('#callToUsernameInput');
 var callBtn = document.querySelector('#callBtn'); 
 
 var hangUpBtn = document.querySelector('#hangUpBtn'); 
-//var localAudio = document.querySelector('#localAudio'); 
+var localAudio = document.querySelector('#localAudio'); 
 var remoteAudio = document.querySelector('#remoteAudio'); 
 
 var yourConn; 
@@ -140,7 +140,7 @@ function handleLogin(success) {
          stream = myStream; 
 			
          //displaying local audio stream on the page 
-         //localAudio.src = window.URL.createObjectURL(stream);
+         localAudio.src = window.URL.createObjectURL(stream);
 			
          //using Google public stun server 
          var configuration = { 
