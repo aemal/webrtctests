@@ -180,7 +180,7 @@ callBtn.addEventListener("click", function () {
 	
    if (callToUsername.length > 0) { 
       connectedUser = callToUsername; 
-		
+		console.log("Creating an offer...");
       // create an offer 
       yourConn.createOffer(function (offer) { 
          send({
@@ -197,9 +197,11 @@ callBtn.addEventListener("click", function () {
  
 //when somebody sends us an offer 
 function handleOffer(offer, name) { 
+	console.log("Handling an offer...");
    connectedUser = name; 
    yourConn.setRemoteDescription(new RTCSessionDescription(offer)); 
 	
+	console.log("Creating an answer...");
    //create an answer to an offer 
    yourConn.createAnswer(function (answer) { 
       yourConn.setLocalDescription(answer); 
@@ -217,11 +219,13 @@ function handleOffer(offer, name) {
  
 //when we got an answer from a remote user 
 function handleAnswer(answer) { 
+	console.log("Handling an answer...");
    yourConn.setRemoteDescription(new RTCSessionDescription(answer)); 
 };
  
 //when we got an ice candidate from a remote user 
 function handleCandidate(candidate) { 
+	console.log("Handling candidate...");
    yourConn.addIceCandidate(new RTCIceCandidate(candidate)); 
 };
  
