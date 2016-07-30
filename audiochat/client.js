@@ -1,4 +1,4 @@
-//our username 
+//Our username 
 var name; 
 var connectedUser;
  

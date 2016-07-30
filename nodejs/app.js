@@ -3,7 +3,7 @@ var http = require('http')
 var options = {
   host: 'localhost',
   port: 80,
-  path: '/helpme/main/check_helper/aemaaaal',
+  path: '/helpme/main/check_helper/aemal',
   method: 'POST'
 };
 
