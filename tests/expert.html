@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+
+    <title>Helpme Testing</title>
+
+    <meta name="description" content="OneWay Screen Sharing using RTCMultiConnection" />
+    <meta name="keywords" content="WebRTC,RTCMultiConnection,Demos,Experiments,Samples,Examples" />
+
+    <style>
+        video {
+            object-fit: fill;
+            width: 100%
+        }
+        button,
+        input,
+        select {
+            font-weight: normal;
+            padding: 2px 4px;
+            text-decoration: none;
+            display: inline-block;
+            text-shadow: none;
+            font-size: 16px;
+            outline: none;
+        }
+        .make-center {
+            text-align: center;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <article>
+
+
+
+        <section class="experiment">
+
+            <div id="videos-container"></div>
+            <div id="audios-container"></div>
+
+        </section>
+
+        <!-- <script src="/dist/rmc3.min.js"></script> -->
+        <script src="RTCMultiConnection/RTCMultiConnection.js"></script>
+
+        <!-- capture screen from any HTTPs domain! -->
+        <script src="getScreenId.js"></script>
+
+        <!-- custom layout for HTML5 audio/video elements -->
+        <script src="getMediaElement.js"></script>
+
+        <!-- socket.io for signaling -->
+<script src="https://helpme.com.de:9090/socket.io/socket.io.js"></script>
+		
+        <script>
+            // ......................................................
+            // .......................UI Code........................
+            // ......................................................
+			
+            // ......................................................
+            // ..................RTCMultiConnection Code.............
+            // ......................................................
+            var connection = new RTCMultiConnection();
+            // by default, socket.io server is assumed to be deployed on your own URL
+            connection.socketURL = 'https://helpme.com.de:9090/';
+            // comment-out below line if you do not have your own socket.io server
+            // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+            connection.socketMessageEvent = 'audio-plus-screen-sharing-demo';
+            connection.session = {
+                audio: 'two-way'//, // merely audio will be two-way, rest of the streams will be oneway
+                //screen: true,
+                //oneway: true
+            };
+            connection.sdpConstraints.mandatory = {
+                OfferToReceiveAudio: true//,
+                //OfferToReceiveVideo: true
+            };
+           // connection.videosContainer = document.getElementById('videos-container');
+            connection.audiosContainer = document.getElementById('audios-container');
+            connection.onstream = function(event) {
+                if(event.type === 'remote' && !connection.session.video) {
+                    //document.getElementById('btn-add-video').disabled = false;
+                }
+                var width = event.mediaElement.clientWidth || connection.videosContainer.clientWidth;
+                var mediaElement = getMediaElement(event.mediaElement, {
+                    title: event.userid,
+                    buttons: ['full-screen'],
+                    width: width,
+                    showOnMouseEnter: false
+                });
+                if(event.stream.isScreen) {
+                    connection.videosContainer.appendChild(mediaElement);
+				}
+                else {
+                    connection.audiosContainer.appendChild(mediaElement);
+                }
+                //setTimeout(function() {
+                 //   mediaElement.media.play();
+               // }, 5000);
+                mediaElement.id = event.streamid;
+            };
+            connection.onstreamended = function(event) {
+                var mediaElement = document.getElementById(event.streamid);
+                if(mediaElement) {
+                    mediaElement.parentNode.removeChild(mediaElement);
+                }
+            };
+            // Using getScreenId.js to capture screen from any domain
+            // You do NOT need to deploy Chrome Extension YOUR-Self!!
+            //connection.getScreenConstraints = function(callback) {
+             //   getScreenConstraints(function(error, screen_constraints) {
+              //      if (!error) {
+               //         screen_constraints = connection.modifyScreenConstraints(screen_constraints);
+                //        callback(error, screen_constraints);
+                 //       return;
+                  //  }
+                   // throw error;
+               // });
+           // };
+
+			
+
+			var socket = io.connect("https://helpme.com.de:9090");
+
+			socket.on('new message2', function(data){
+				
+				if(data == "refresh") {
+					
+					if (confirm('Get call?')) {
+						connection.join("420");
+						socket.emit('send message2', "received");
+					} else {
+						console.log("Call dropped");
+					}					   
+
+				}
+				
+				//$chat.append(data + "<br/>");
+				//$.playSound(Settings.base_url + "assets/sounds/alert");
+				//createMessage("left", data);
+ 				//if(data == "refresh")
+			//		location.reload();
+				//$("#messageDiv").animate({ scrollTop: $('#messageDiv').prop("scrollHeight")}, 1000);	
+			});
+			
+			
+			socket.on('new message2', function(data){
+				
+				if(data == "refresh2") {
+					if (confirm('Get screen sharing?')) {
+					   	connection2.join("421");
+					} else {
+						console.log("Call dropped");
+					}					   
+
+				}
+				
+				
+				//$chat.append(data + "<br/>");
+				//$.playSound(Settings.base_url + "assets/sounds/alert");
+				//createMessage("left", data);
+ 				//if(data == "refresh")
+			//		location.reload();
+				//$("#messageDiv").animate({ scrollTop: $('#messageDiv').prop("scrollHeight")}, 1000);	
+			});
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			var connection2 = new RTCMultiConnection();
+            // by default, socket.io server is assumed to be deployed on your own URL
+            connection2.socketURL = 'https://helpme.com.de:9090/';
+            // comment-out below line if you do not have your own socket.io server
+            // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+            connection2.socketMessageEvent = 'audio-plus-screen-sharing-demo2';
+            connection2.session = {
+                audio: false,//'two-way', // merely audio will be two-way, rest of the streams will be oneway
+                screen: true,
+                oneway: true
+            };
+            connection2.sdpConstraints.mandatory = {
+                //OfferToReceiveAudio: true,
+                OfferToReceiveVideo: true
+            };
+            connection2.videosContainer = document.getElementById('videos-container');
+            //connection.audiosContainer = document.getElementById('audios-container');
+            connection2.onstream = function(event) {
+                if(event.type === 'remote' && !connection.session.video) {
+                    //document.getElementById('btn-add-video').disabled = false;
+                }
+                var width = event.mediaElement.clientWidth || connection2.videosContainer.clientWidth;
+                var mediaElement = getMediaElement(event.mediaElement, {
+                    title: event.userid,
+                    buttons: ['full-screen'],
+                    width: width,
+                    showOnMouseEnter: false
+                });
+                if(event.stream.isScreen) {
+                    connection2.videosContainer.appendChild(mediaElement);
+				}
+                else {
+                    //connection.audiosContainer.appendChild(mediaElement);
+                }
+                setTimeout(function() {
+                    mediaElement.media.play();
+                }, 5000);
+                mediaElement.id = event.streamid;
+            };
+            connection2.onstreamended = function(event) {
+                var mediaElement = document.getElementById(event.streamid);
+                if(mediaElement) {
+                    mediaElement.parentNode.removeChild(mediaElement);
+                }
+            };
+            // Using getScreenId.js to capture screen from any domain
+            // You do NOT need to deploy Chrome Extension YOUR-Self!!
+            connection2.getScreenConstraints = function(callback) {
+                getScreenConstraints(function(error, screen_constraints) {
+                    if (!error) {
+                        screen_constraints = connection2.modifyScreenConstraints(screen_constraints);
+                        callback(error, screen_constraints);
+                        return;
+                    }
+                    throw error;
+                });
+            };
+			
+			
+			
+			
+			
+        </script>
+
+       
+
+    
+    </article>
+
+
+</body>
+
+</html>

@@ -21,12 +21,13 @@ socket.on('new message', function(msg){
 console.log("-----------------------");
 	console.log(data);
 	console.log("-----------------------");
-	   switch(data.type) { 
+
+	switch(data.type) { 
 		  case "login": 
-			 handleLogin(data.success); 
+			 //handleLogin(data.success); 
 			 break; 
 		  //when somebody wants to call us 
-		  case "offer": 
+		  case "offer":
 			 handleOffer(data.offer, data.name); 
 			 break; 
 		  case "answer": 
@@ -122,7 +123,7 @@ loginBtn.addEventListener("click", function (event) {
       }); 
    } 
 	
-	//handleLogin(true);
+	handleLogin(true);
 	
 });
  
@@ -143,7 +144,7 @@ function handleLogin(success) {
          stream = myStream; 
 			
          //displaying local audio stream on the page 
-         localAudio.src = window.URL.createObjectURL(stream);
+         //localAudio.src = window.URL.createObjectURL(stream);
 			
          //using Google public stun server 
          var configuration = { 

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+
+    <title>Helpme Testing</title>
+
+    <meta name="description" content="OneWay Screen Sharing using RTCMultiConnection" />
+    <meta name="keywords" content="WebRTC,RTCMultiConnection,Demos,Experiments,Samples,Examples" />
+
+    <style>
+        video {
+            object-fit: fill;
+            width: 100%
+        }
+        button,
+        input,
+        select {
+            font-weight: normal;
+            padding: 2px 4px;
+            text-decoration: none;
+            display: inline-block;
+            text-shadow: none;
+            font-size: 16px;
+            outline: none;
+        }
+        .make-center {
+            text-align: center;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <article>
+
+
+
+        <section class="experiment">
+            <div class="make-center">
+                <button id="call">CALL</button>
+                <button id="screen-sharing">SCREEN SHARING</button>
+ 
+                <div id="room-urls" style="text-align: center;display: none;background: #F1EDED;margin: 15px -10px;border: 1px solid rgb(189, 189, 189);border-left: 0;border-right: 0;"></div>
+            </div>
+
+            <div id="videos-container"></div>
+            <div id="audios-container"></div>
+
+            <br><br>
+            (Install <a href="https://chrome.google.com/webstore/detail/screen-capturing/ajhifddimkapgcifgcodmmfdlknahffk" target="_blank">Chrome</a> / or / <a href="https://www.webrtc-experiment.com/store/firefox-extension/enable-screen-capturing.xpi" target="_blank">Firefox</a> extension) - Extensions are <a href="https://github.com/muaz-khan?tab=repositories">open-sourced</a>!
+        </section>
+
+        <!-- <script src="/dist/rmc3.min.js"></script> -->
+        <script src="RTCMultiConnection/RTCMultiConnection.js"></script>
+
+        <!-- capture screen from any HTTPs domain! -->
+        <script src="getScreenId.js"></script>
+
+        <!-- custom layout for HTML5 audio/video elements -->
+        <script src="getMediaElement.js"></script>
+
+        <!-- socket.io for signaling -->
+<script src="https://helpme.com.de:9090/socket.io/socket.io.js"></script>
+		
+        <script>
+			
+	
+            // ......................................................
+            // .......................UI Code........................
+            // ......................................................
+            document.getElementById('call').onclick = function() {
+                //disableInputButtons();
+                //connection.open(document.getElementById('room-id').value, function() {
+                
+				connection.open("420", function() {
+                    console.log("Done!");
+					socket.emit('send message2', "refresh");
+					//showRoomURL(connection.sessionid);
+                });
+				setTimeout(function() {
+                   // mediaElement.media.play();
+					//socket.emit('send message2', "refresh");
+                }, 5000);
+					
+				
+            };
+
+			var socket = io.connect("https://helpme.com.de:9090");
+
+			
+			document.getElementById('screen-sharing').onclick = function() {
+                 //connection.addStream({
+				//	screen: true,
+				//	oneway: true
+				//});
+				//console.log("AAA");
+				//socket.emit('send message2', "refresh");	
+				connection2.open("421", function() {
+                    console.log("Done Screen Sharing!");
+					//showRoomURL(connection.sessionid);
+                });
+								
+            };
+			
+            // ......................................................
+            // ..................RTCMultiConnection Code.............
+            // ......................................................
+            var connection = new RTCMultiConnection();
+			
+			
+			
+			// by default, socket.io server is assumed to be deployed on your own URL
+            connection.socketURL = 'https://helpme.com.de:9090/';
+            // comment-out below line if you do not have your own socket.io server
+            // connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
+            connection.socketMessageEvent = 'audio-plus-screen-sharing-demo';
+            connection.session = {
+                audio: 'two-way', // merely audio will be two-way, rest of the streams will be oneway
+                screen: true,
+                oneway: true
+            };
+            connection.sdpConstraints.mandatory = {
+                OfferToReceiveAudio: true,
+                OfferToReceiveVideo: true
+            };
+            connection.videosContainer = document.getElementById('videos-container');
+            connection.audiosContainer = document.getElementById('audios-container');
+            connection.onstream = function(event) {
+                if(event.type === 'remote' && !connection.session.video) {
+                    //document.getElementById('btn-add-video').disabled = false;
+                }
+                var width = event.mediaElement.clientWidth || connection.videosContainer.clientWidth;
+                var mediaElement = getMediaElement(event.mediaElement, {
+                    title: event.userid,
+                    buttons: ['full-screen'],
+                    width: width,
+                    showOnMouseEnter: false
+                });
+                if(event.stream.isScreen) {
+                    connection.videosContainer.appendChild(mediaElement);
+                }
+                else {
+                    connection.audiosContainer.appendChild(mediaElement);
+                }
+                setTimeout(function() {
+                    mediaElement.media.play();
+                }, 5000);
+                mediaElement.id = event.streamid;
+            };
+            connection.onstreamended = function(event) {
+                var mediaElement = document.getElementById(event.streamid);
+                if(mediaElement) {
+                    mediaElement.parentNode.removeChild(mediaElement);
+                }
+            };
+            // Using getScreenId.js to capture screen from any domain
+            // You do NOT need to deploy Chrome Extension YOUR-Self!!
+            connection.getScreenConstraints = function(callback) {
+                console.log("Before");
+				getScreenConstraints(function(error, screen_constraints) {
+                    if (!error) {
+                        screen_constraints = connection.modifyScreenConstraints(screen_constraints);
+                        callback(error, screen_constraints);
+                        return;
+                    }
+                    throw error;
+                });
+				console.log("After");
+            };
+			
+			
+			
+			
+			
+	
+			
+			
+			
+			
+        </script>
+
+       
+
+    
+    </article>
+
+
+</body>
+
+</html>
